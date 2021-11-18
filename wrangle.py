@@ -50,6 +50,64 @@ def wrangle_census_data():
     census_light = quarterly_dates(census_light)
     return census_light  
         
+    
+    
+    
+    
+    
+    
+####### WRANGLE FUNCTIONS FOR DATA FROM QCEW DATA FROM TEXASLMI.COM #######
         
-        
-        
+def extract_date(df):
+    '''
+    Takes each row of df and creates a date column for the observation based on values in two different columns
+    '''
+    if (df[1] == 1) & (df[4] == 1): # first quarter, first month
+        return str(df[0]) + '-' + '01' # January
+    elif (df[1] == 1) & (df[4] == 2): # first quarter, second month
+        return str(df[0]) + '-' + '02' # February
+    elif (df[1] == 1) & (df[4] == 3): # etc.
+        return str(df[0]) + '-' + '03'
+    elif (df[1] == 2) & (df[4] == 1):
+        return str(df[0]) + '-' + '04'
+    elif (df[1] == 2) & (df[4] == 2):
+        return str(df[0]) + '-' + '05'
+    elif (df[1] == 2) & (df[4] == 3):
+        return str(df[0]) + '-' + '06'
+    elif (df[1] == 3) & (df[4] == 1):
+        return str(df[0]) + '-' + '07'
+    elif (df[1] == 3) & (df[4] == 2):
+        return str(df[0]) + '-' + '08'
+    elif (df[1] == 3) & (df[4] == 3):
+        return str(df[0]) + '-' + '09'
+    elif (df[1] == 4) & (df[4] == 1):
+        return str(df[0]) + '-' + '10'
+    elif (df[1] == 4) & (df[4] == 2):
+        return str(df[0]) + '-' + '11'
+    elif (df[1] == 4) & (df[4] == 3):
+        return str(df[0]) + '-' + '12'
+    
+def get_tx_data():
+    '''
+    Reads in raw data, filters, melts some columns to rows to get monthly observations, and creates datetime index
+    '''
+    df = pd.read_excel('QCEW-TX-L3.xlsx') # get raw data
+    df = df[df.Ownership == 'Total All'] # filter just to all ownership groups
+    df = df[['Year', 'Period', 'Industry Code', 'Industry', 'Month 1 Employment', 'Month 2 Employment', 'Month 3 Employment']] # only keep necessary columns
+    df = df.melt(id_vars=['Year', 'Period', 'Industry Code', 'Industry'], var_name='Month', value_name='Total Employment') # melt columns to rows to get monthly instead of quarterly
+    df['Month'] = df.Month.apply(lambda x: [int(s) for s in x.split() if s.isdigit()][0]) # pull month integer out of string
+    df['Date'] = df.apply(extract_date, axis=1) # use function to pull out date from multiple columns
+    df.Date = pd.to_datetime(df.Date) # convert data to datetime dtype
+    return df
+
+def create_df_dict(df):
+    '''
+    Takes in df and creates a dictionary of series for all industries and the time interval we are interested in
+    '''
+    ind_list = df.Industry.value_counts().index.tolist() # get list of industries
+    ind_list.remove('Monetary Authorities-Central Bank') # remove this industry since it has missing data
+    ind_list.remove('Unclassified') # remove this industry since it is a catchall for a lot of unique industries that would be noise for our clustering
+    industry_df_dict = {} # create empty df for dfs for each industry
+    for ind in ind_list:
+        industry_df_dict[ind] = df[df.Industry == ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2019' : ] # pull out series
+    return industry_df_dict, ind_list
