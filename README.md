@@ -1,6 +1,6 @@
-# Texas Job Market Analysis README.md
+# Texas Job Market Analysis
 
-- add image here
+<img src="https://i2.wp.com/kychamberbottomline.com/wp-content/uploads/2021/07/Jobs.jpg?resize=777%2C437&ssl=1" alt="Help Wanted" title="Help Wanted" width="777" height="437" />
 
 ### Team Members: Adam Talbot, Curtis Johansen, James Allen, Jeff Akins, Veronica Reyes
 
