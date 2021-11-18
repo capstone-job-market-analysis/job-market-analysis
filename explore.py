@@ -187,3 +187,127 @@ def acquire_to_cluster():
         plt.yscale('log')
         plt.legend(bbox_to_anchor= (1.03,1))
         plt.show()
+        
+## DIFFERENT FUNCTIONS FOR LOADING MODEL ##
+
+def load_cluster_and_plot_w_legend(loaded_model, scaled_char_df, char_df, df):
+    '''
+    Creates clusters and generates plots to visualize them with legend
+    '''
+    char_df['cluster_1'] = loaded_model.predict(scaled_char_df) # add cluster labels to original df
+    readable_label_dict = {
+         0 : 'Moderate Negative Impact, Slow or No Recovery',
+         1 : 'Moderate Negative Impact, Quick Recovery',
+         2 : 'Significant Negative Impact, Mostly Recovered',
+         3 : 'No Impact',
+         4 : 'Minor Negative Impact, Quick Recovery',
+         5 : 'Significant Negative Impact, Mostly Recovered, Highly Seasonal',
+         6 : 'Positively Impacted'
+         }
+    char_df['cluster_1'] = char_df['cluster_1'].map(readable_label_dict)
+#     print(char_df.cluster_1.value_counts()) # take a look at distribution of clusters
+#     print('\n')
+    cluster_labels_dict = char_df[['cluster_1']].to_dict()['cluster_1'] # get dictionary of cluster labels for each industry
+    df['Cluster'] = df.Industry.map(cluster_labels_dict) # add new column to df with labels via mapping
+    df = df[df.Industry != 'Monetary Authorities-Central Bank'] # drop this since there was missing data for this industry
+    df = df[df.Industry != 'Unclassified'] # drop this industry since it is a catchall and is noise for model
+    cluster_list = df.Cluster.value_counts().index.tolist() # create list of clusters
+    cluster_df_dict = {} # create empty dictionary for subset dfs for each cluster
+    for clust in cluster_list: # loop through list of cluster labels
+        cluster_df_dict[clust] = df[df.Cluster == clust] # add dfs to dictionary
+    for clust in cluster_list: # plot industries for each cluster on same chart
+        ind_list = cluster_df_dict[clust].Industry.value_counts().index.tolist() # create list of industries present in this specific cluster
+        industry_df_dict = {} # create empty dictionary to house dfs for each industry df from each cluster
+        for ind in ind_list:
+            industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
+        for ind in ind_list:
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot(label=ind) # plot each industry
+        plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'{clust}')
+        plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
+        plt.yscale('log')
+        plt.legend(bbox_to_anchor= (1.03,1))
+        plt.show()
+    return char_df
+
+def load_cluster_and_plot_no_legend(loaded_model, scaled_char_df, char_df, df):
+    '''
+    Creates clusters and generates plots to visualize them without legend
+    '''
+    char_df['cluster_1'] = loaded_model.predict(scaled_char_df) # add cluster labels to original df
+#     print(char_df.cluster_1.value_counts()) # take a look at distribution of clusters
+#     print('\n')
+    cluster_labels_dict = char_df[['cluster_1']].to_dict()['cluster_1'] # get dictionary of cluster labels for each industry
+    df['Cluster'] = df.Industry.map(cluster_labels_dict) # add new column to df with labels via mapping
+    df = df[df.Industry != 'Monetary Authorities-Central Bank'] # drop this since there was missing data for this industry
+    df = df[df.Industry != 'Unclassified'] # drop this industry since it is a catchall and is noise for model
+    df.Cluster = df.Cluster.astype('int') # cast as int
+    cluster_list = df.Cluster.value_counts().index.tolist() # create list of clusters
+    cluster_df_dict = {} # create empty dictionary for subset dfs for each cluster
+    for clust in cluster_list: # loop through list of cluster labels
+        cluster_df_dict[clust] = df[df.Cluster == clust] # add dfs to dictionary
+    for clust in cluster_list: # plot industries for each cluster on same chart
+        ind_list = cluster_df_dict[clust].Industry.value_counts().index.tolist() # create list of industries present in this specific cluster
+        industry_df_dict = {} # create empty dictionary to house dfs for each industry df from each cluster
+        for ind in ind_list:
+            industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
+        for ind in ind_list:
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot() # plot each industry
+        plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'Cluster {clust}')
+        plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
+        plt.yscale('log')
+        plt.show()
+    return char_df
+
+def load_acquire_to_cluster(loaded_model):
+    df = pd.read_excel('QCEW-TX-L3.xlsx') # get raw data
+    df = df[df.Ownership == 'Total All'] # filter just to all ownership groups
+    df = df[['Year', 'Period', 'Industry Code', 'Industry', 'Month 1 Employment', 'Month 2 Employment', 'Month 3 Employment']] # only keep necessary columns
+    df = df.melt(id_vars=['Year', 'Period', 'Industry Code', 'Industry'], var_name='Month', value_name='Total Employment') # melt columns to rows to get monthly instead of quarterly
+    df['Month'] = df.Month.apply(lambda x: [int(s) for s in x.split() if s.isdigit()][0]) # pull month integer out of string
+    df['Date'] = df.apply(w.extract_date, axis=1) # use function to pull out date from multiple columns
+    df.Date = pd.to_datetime(df.Date) # convert data to datetime dtype
+    ind_list = df.Industry.value_counts().index.tolist() # get list of industries
+    ind_list.remove('Monetary Authorities-Central Bank')
+    ind_list.remove('Unclassified')
+    industry_df_dict = {} # create empty df for dfs for each industry
+    for ind in ind_list:
+        industry_df_dict[ind] = df[df.Industry == ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2019' : ] # pull out series time interval
+    characteristics = [] # create empty char list of dictionaries
+    for ind in ind_list: # loop through industries and characterize them each using function, append to list of dicts
+        s = industry_df_dict[ind]
+        characteristics.append(characterize_series(s)) 
+    char_df = pd.DataFrame(characteristics, index=ind_list) # convert to df
+    scaled_char_df = scale(char_df, MinMaxScaler()) # scale df to use for clustering
+    char_df['cluster_1'] = loaded_model.predict(scaled_char_df)
+    readable_label_dict = {
+         0 : 'Moderate Negative Impact, Slow or No Recovery',
+         1 : 'Moderate Negative Impact, Quick Recovery',
+         2 : 'Significant Negative Impact, Mostly Recovered',
+         3 : 'No Impact',
+         4 : 'Minor Negative Impact, Quick Recovery',
+         5 : 'Significant Negative Impact, Mostly Recovered, Highly Seasonal',
+         6 : 'Positively Impacted'
+         }
+    char_df['cluster_1'] = char_df['cluster_1'].map(readable_label_dict)
+#     print(char_df.cluster_1.value_counts()) # take a look at distribution of clusters
+#     print('\n')
+    cluster_labels_dict = char_df[['cluster_1']].to_dict()['cluster_1'] # get dictionary of cluster labels for each industry
+    df['Cluster'] = df.Industry.map(cluster_labels_dict) # add new column to df with labels
+    df = df[df.Industry != 'Monetary Authorities-Central Bank'] # need to drop this since there was missing data for this industry
+    df = df[df.Industry != 'Unclassified'] # need to drop this since there was missing data for this industry
+    cluster_list = df.Cluster.value_counts().index.tolist() # create list of clusters
+    cluster_df_dict = {} # create empty dictionary for subset dfs for each cluster
+    for clust in cluster_list:
+        cluster_df_dict[clust] = df[df.Cluster == clust] # add dfs to dictionary
+    for clust in cluster_list: # plot industries for each cluster on same chart
+        ind_list = cluster_df_dict[clust].Industry.value_counts().index.tolist() # create list of industries present in this specific cluster
+        industry_df_dict = {} # create empty dictionary to house dfs for each industry df from each cluster
+        for ind in ind_list:
+            industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
+        for ind in ind_list:
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot(label=ind) # plot each industry
+        plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'{clust}')
+        plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
+        plt.yscale('log')
+        plt.legend(bbox_to_anchor= (1.03,1))
+        plt.show()
