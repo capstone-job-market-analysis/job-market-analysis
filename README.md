@@ -1,4 +1,4 @@
-# Texas Job Market Analysis
+# Help Wanted
 
 <img src="https://i2.wp.com/kychamberbottomline.com/wp-content/uploads/2021/07/Jobs.jpg?resize=777%2C437&ssl=1" alt="Help Wanted" title="Help Wanted" width="777" height="437" />
 
@@ -74,9 +74,12 @@
 
 ---
 
+#### Explore
+
 | Feature                        | Description                                                                                                            | Data Type | Notes |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------- | ------------- |
 
+#### Cluster
 
 ---
 | Feature | Definition | Data Type | Notes |
