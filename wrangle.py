@@ -9,6 +9,9 @@ from datetime import datetime
 
 
 # Functions ------------------------------------------------------------------------------------
+
+#### Function to create a timeseries column:
+
 def quarterly_dates(df):
     '''Takes in a dataframe with a year and a quarter column 
     and then combines them into a datetime timeseries column'''       
@@ -27,6 +30,7 @@ def quarterly_dates(df):
     return df
 
 
+#### Function to Clean the Texas Census Data with no Subgroups:
 
 def wrangle_census_data():
     '''This function will take in a specific file with QWI data
@@ -50,11 +54,85 @@ def wrangle_census_data():
     census_light = quarterly_dates(census_light)
     return census_light  
         
+
+#### Function to Clean the Texas Census Data with Education Subgroups:    
+    
+def education_census_data():
+    '''This function will take in a specific file with QWI education 
+    data for the state of Texas. It will then clean the dataframe by 
+    removing unneeded columns, and renaming a column in preparation 
+    for exploration.'''
+        # Read the CSV file:
+    census = pd.read_csv('LaborMarketWEducation.csv')
+        # List of columns that need to be dropped:
+    col_to_drop = ['sEmp', 'sSep', 'periodicity', 'periodicity_label.value',
+               'seasonadj', 'seasonadj_label.value', 'geo_level', 'geo_level_label.value', 
+               'geography', 'geography_label.value', 'ind_level', 'ownercode', 'HirA',
+               'ownercode_label.value', 'agegrp_label.value', 'race_label.value',
+               'ethnicity_label.value', 'firmage_label.value', 'firmsize_label.value',
+               'agegrp', 'race', 'ethnicity', 'firmage', 'firmsize', 
+               'FrmJbGn', 'FrmJbLs', 'EarnBeg', 'Payroll', 'sHirA', 'sFrmJbGn', 'sFrmJbLs', 'sEarnBeg', 'sPayroll']
+        # Drop the list of columns:
+    census_light = census.drop(columns=col_to_drop)
+        # Renaming:
+    census_light = census_light.rename(columns={'industry_label.value': 'industry_name'})  
+        # Adding quarters (i.e. quarter years) as a datetime format:
+    census_light = quarterly_dates(census_light)
+    return census_light     
     
     
+#### Function to Clean the Texas Census Data with Age Subgroups: 
+
+def age_census_data():
+    '''This function will take in a specific file with QWI education 
+    data for the state of Texas. It will then clean the dataframe by 
+    removing unneeded columns, and renaming a column in preparation 
+    for exploration.'''
+        # Read the CSV file:
+    census = pd.read_csv('LaborMarketWAge.csv')
+        # List of columns that need to be dropped:
+    col_to_drop = ['sEmp', 'sSep', 'periodicity', 'periodicity_label.value',
+               'seasonadj', 'seasonadj_label.value', 'geo_level', 'geo_level_label.value', 
+               'geography', 'geography_label.value', 'ind_level', 'ownercode', 'HirA',
+               'ownercode_label.value', 'race_label.value', 'agegrp', 'education', 'education_label.value',
+               'ethnicity_label.value', 'firmage_label.value', 'firmsize_label.value',
+               'race', 'ethnicity', 'firmage', 'firmsize', 'FrmJbC', 'HirAEndReplR', 'sFrmJbC', 'sHirAEndReplR',
+               'FrmJbGn', 'FrmJbLs', 'EarnBeg', 'Payroll', 'sHirA', 'sFrmJbGn', 'sFrmJbLs', 'sEarnBeg', 'sPayroll']
+        # Drop the list of columns:
+    census_light = census.drop(columns=col_to_drop)
+        # Renaming:
+    census_light = census_light.rename(columns={'industry_label.value': 'industry_name'})  
+        # Adding quarters (i.e. quarter years) as a datetime format:
+    census_light = quarterly_dates(census_light)
+    return census_light 
+
+
+#### Function to Clean the Texas Census Data with education Subgroups: 
+
+def race_census_data():
+    '''This function will take in a specific file with QWI education 
+    data for the state of Texas. It will then clean the dataframe by 
+    removing unneeded columns, and renaming a column in preparation 
+    for exploration.'''
+        # Read the CSV file:
+    census = pd.read_csv('LaborMarketWRace.csv')
+        # List of columns that need to be dropped:
+    col_to_drop = ['sEmp', 'sSep', 'periodicity', 'periodicity_label.value',
+               'seasonadj', 'seasonadj_label.value', 'geo_level', 'geo_level_label.value', 
+               'geography', 'geography_label.value', 'ind_level', 'ownercode', 'HirA',
+               'ownercode_label.value', 'agegrp_label.value', 'FrmJbC', 'HirAEndReplR', 
+               'firmage_label.value', 'firmsize_label.value', 'sFrmJbC', 'sHirAEndReplR',
+               'agegrp', 'firmage', 'firmsize', 'education', 'education_label.value',
+               'FrmJbGn', 'FrmJbLs', 'EarnBeg', 'Payroll', 'sHirA', 'sFrmJbGn', 'sFrmJbLs', 'sEarnBeg', 'sPayroll']
+        # Drop the list of columns:
+    census_light = census.drop(columns=col_to_drop)
+        # Renaming:
+    census_light = census_light.rename(columns={'industry_label.value': 'industry_name'})  
+        # Adding quarters (i.e. quarter years) as a datetime format:
+    census_light = quarterly_dates(census_light)
+    return census_light 
     
-    
-    
+
     
 ####### WRANGLE FUNCTIONS FOR DATA FROM QCEW DATA FROM TEXASLMI.COM #######
         

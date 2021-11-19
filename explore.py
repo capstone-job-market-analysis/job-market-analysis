@@ -311,3 +311,49 @@ def load_acquire_to_cluster(loaded_model):
         plt.yscale('log')
         plt.legend(bbox_to_anchor= (1.03,1))
         plt.show()
+
+
+
+#### Explore files for the Census Data:
+
+# Function to calculate 2020 Q1 minus Q3 Job Loss
+def q1_minus_q3_emp(census_light):
+    '''This function will calculate job loss duering COVID shut downs.
+    So, 2020 Q1 Employment minus Q3 Employment'''
+        # Top 10 Job loss by industry of 2020 using q1 Emp minus q3 Emp:
+    q1 = census_light[['industry', 'industry_name', 'Emp', 'date']][census_light.date == '2020-01-01']
+    q3 = census_light[['industry', 'industry_name', 'Emp', 'date']][census_light.date == '2020-07-01']
+
+        # match indexes so that I can subtract the quarterly columns
+    q1.set_index('industry', drop=True, inplace=True)
+    q3.set_index('industry', drop=True, inplace=True)
+
+        # Subtract 2020 q1 - q3 employment:
+    q1_minus_q3 = q1.Emp - q3.Emp
+
+        # Add q3 numbers to the datafram for ease of comparison if needed:
+    q1['q3_Emp'] = q3.Emp
+
+        # Create the difference column:
+    q1['q1_minus_q3'] = q1_minus_q3
+
+        # Rename to q since the dataframe now contains q1 and q3 data:
+    q = q1
+
+        # Sort
+    q = q.sort_values('q1_minus_q3', ascending=False)
+
+    return q
+
+# Function that creates a new dataframe with select industries 
+def select_industries(df, first_industry, list_of_remaining_industries):
+    '''This function creates a dataframe out of the census data
+    for only the selected industries'''
+        # Use one of the industries to initiate the dataframe:
+    df_new = df[df.industry == first_industry]
+        # Loop through the remaining industries to combine all industries
+    for industry in list_of_remaining_industries:
+        industry_loss = df[df.industry == industry]
+        df_new = pd.concat([df_new, industry_loss], ignore_index=True)
+
+    return df_new
