@@ -64,9 +64,9 @@
 - Anyone interested in taking a look at the Texas job market during the COVID-19 pandemic
 
 #### Project Context
-- The Cluster dataset was obtained from: [link](https://texaslmi.com/)
+- The Cluster dataset was obtained from: [Texas Labor Market](https://texaslmi.com/)
 
-- The Explore dataset was obtained from: [link](https://ledextract.ces.census.gov/static/data.html)
+- The Explore dataset was obtained from: [US Census](https://ledextract.ces.census.gov/static/data.html)
 
 #### Data Dictionaries
 
@@ -76,14 +76,40 @@
 
 #### Explore
 
-| Feature                        | Description                                                                                                            | Data Type | Notes |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------- | ------------- |
+---
+|Variable	|Type	|label |
+| ----- | ----- | ----- |
+|periodicity	|Char(1)	|Periodicity of report|
+|seasonadj	|Char(1)	|Seasonal Adjustment Indicator|
+|geo_level	|Char(1)	|Group: Geographic level of aggregation|
+|geography	|Char(8)	|Group: Geography code|
+|ind_level	|Char(1)	|Group: Industry level of aggregation|
+|industry	|Char(5)	|Group: Industry code|
+|ownercode	|Char(3)	|Group: Ownership group code|
+|sex	|Char(1)	|Group: Gender code|
+|agegrp	|Char(3)	|Group: Age group code (WIA)|
+|race	|Char(2)	|Group: race|
+|ethnicity	|Char(2)	|Group: ethnicity|
+|education	|Char(2)	|Group: education|
+|firmage	|Char(1)	|Group: Firm Age group|
+|firmsize	|Char(1)	|Group: Firm Size group|
+|year	|Num	|Time: Year|
+|quarter	|Num	|Time: Quarter|
+
 
 #### Cluster
 
 ---
 | Feature | Definition | Data Type | Notes |
 | ----- | ----- | ----- | ----- |
+| 'Year'| year column | int64 | datetime for year
+| 'Period' | One, Two, Three | int64 | Periods for each quarter |
+| 'Industry Code' | industry classification code | int64 | Code to classify each industry
+| 'Industry' | Industry name | object | Name of each industry |
+| 'Month' | Month of the year | int64 | datetime for Month |
+| 'Total Employment' | total number of employment | int64 | Total number of employment |
+| 'Date' | year, month, day | datetime64 | date format YYYY-MM-DD |
+
 
 
 ---
