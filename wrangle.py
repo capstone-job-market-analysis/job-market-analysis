@@ -189,3 +189,27 @@ def create_df_dict(df):
     for ind in ind_list:
         industry_df_dict[ind] = df[df.Industry == ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2019' : ] # pull out series
     return industry_df_dict, ind_list
+
+def get_tx_forecasting_data():
+    '''
+    Reads in raw data, filters, melts some columns to rows to get monthly observations, and creates datetime index
+    '''
+    df = pd.read_excel('QCEW-TX-L3-2016.xlsx') # get raw data
+    df = df[['Year', 'Period', 'Industry Code', 'Industry', 'Month 1 Employment', 'Month 2 Employment', 'Month 3 Employment']] # only keep necessary columns
+    df = df.melt(id_vars=['Year', 'Period', 'Industry Code', 'Industry'], var_name='Month', value_name='Total Employment') # melt columns to rows to get monthly instead of quarterly
+    df['Month'] = df.Month.apply(lambda x: [int(s) for s in x.split() if s.isdigit()][0]) # pull month integer out of string
+    df['Date'] = df.apply(extract_date, axis=1) # use function to pull out date from multiple columns
+    df.Date = pd.to_datetime(df.Date) # convert data to datetime dtype
+    return df
+
+def create_df_dict_forecasting(df):
+    '''
+    Takes in df and creates a dictionary of series for all industries and the time interval we are interested in
+    '''
+    ind_list = df.Industry.value_counts().index.tolist() # get list of industries
+    ind_list.remove('Monetary Authorities-Central Bank') # remove this industry since it has missing data
+    ind_list.remove('Unclassified') # remove this industry since it is a catchall for a lot of unique industries that would be noise for our clustering
+    industry_df_dict = {} # create empty df for dfs for each industry
+    for ind in ind_list:
+        industry_df_dict[ind] = df[df.Industry == ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index() # pull out series
+    return industry_df_dict, ind_list

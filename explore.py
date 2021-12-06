@@ -367,6 +367,18 @@ def load_acquire_to_cluster_lines(loaded_model):
         plt.yscale('log')
         plt.legend(bbox_to_anchor= (1.03,1))
         plt.show()
+        
+def create_char_df_forecasting(industry_df_dict):
+    '''
+    Creates a pandas df of characterstics of section of times series data
+    '''
+    characteristics = [] # create empty list for list of dictionaries
+    ind_list = list(industry_df_dict.keys())
+    for ind in ind_list: # loop through industries
+        s = industry_df_dict[ind] # characterize them each using function
+        characteristics.append(characterize_series(s)) # append to list of dicts
+    char_df = pd.DataFrame(characteristics, index=ind_list) # convert to df
+    return char_df
 
 
 #### Explore files for the Census Data:
