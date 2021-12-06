@@ -221,7 +221,7 @@ def load_cluster_and_plot_w_legend(loaded_model, scaled_char_df, char_df, df):
         for ind in ind_list:
             industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
         for ind in ind_list:
-            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot(label=ind) # plot each industry
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2018' : ].plot(label=ind) # plot each industry
         plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'{clust}')
         plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
         plt.yscale('log')
@@ -251,7 +251,7 @@ def load_cluster_and_plot_no_legend(loaded_model, scaled_char_df, char_df, df):
         for ind in ind_list:
             industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
         for ind in ind_list:
-            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot() # plot each industry
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2018' : ].plot() # plot each industry
         plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'Cluster {clust}')
         plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
         plt.yscale('log')
@@ -305,7 +305,7 @@ def load_acquire_to_cluster(loaded_model):
         for ind in ind_list:
             industry_df_dict[ind] = cluster_df_dict[clust][cluster_df_dict[clust].Industry == ind] # add dfs for each industry present in each cluster to dictionary
         for ind in ind_list:
-            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index().plot(label=ind) # plot each industry
+            industry_df_dict[ind][['Date', 'Total Employment']].set_index('Date')['Total Employment'].sort_index()['2018' : ].plot(label=ind) # plot each industry
         plt.gca().set(ylabel = 'Total Employment (Log Scale)', title=f'{clust}')
         plt.gca().yaxis.set_major_formatter(lambda x, pos: '{:.2f}M'.format(x / 1_000_000))
         plt.yscale('log')
