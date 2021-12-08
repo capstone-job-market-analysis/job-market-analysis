@@ -15,7 +15,6 @@
     - [Next Steps](#next-steps)    
 - [Data Dictionaries](#data-dictionaries)
 - [Initial Questions](#initial-questions)
-- [Formal Hypotheses](#formal-hypotheses)
 - [Pipeline Stages Breakdown](#pipeline-stages-breakdown)
     - [Plan](#plan)
     - [Acquire](#acquire)
@@ -24,7 +23,7 @@
     - [Cluster](#cluster)
     - [Forecast](#forecast)
 - [Conclusion and Next Steps](#conclusion-and-next-steps)
-- [Reproduce My Project](#reproduce-my-project)
+- [Reproduce This Project](#reproduce-this-project)
 
 ---
 
