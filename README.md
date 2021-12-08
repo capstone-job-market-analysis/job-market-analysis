@@ -12,9 +12,8 @@
     - [Project Objectives](#project-objectives)
     - [Conclusions and Takeaways](#conclusions-and-takeaways)
     - [Recommendations](#recommendations) 
-    - [Next Steps](#next-steps) 
-    - [Next Steps and Recommendations](#next-steps-and-recommendations)    
-- [Data Dictionary](#data-dictionary)
+    - [Next Steps](#next-steps)    
+- [Data Dictionaries](#data-dictionaries)
 - [Initial Questions](#initial-questions)
 - [Formal Hypotheses](#formal-hypotheses)
 - [Pipeline Stages Breakdown](#pipeline-stages-breakdown)
@@ -30,6 +29,8 @@
 ---
 
 ### Executive Summary
+
+---
 
 - This project explored the impact of COVID-19 on the Texas job market. 98 Industries were examined using a combination of U.S. Census data and Texas Labor Market Information. Clustering analysis was used to group the industries into seven categories based on the magnitude of their job loss during the first half of 2020. For the industries that were most affected, subcategories were examined such as gender, age group, education, race, and ethnicity. Time Series modeling was then used to forecast when selected industries would return to pre-COVID levels of employment. 
 
@@ -47,6 +48,8 @@
 - Group industries together based on effect of pandemic
 - Forecast recovery timelines for most-affected industries
 
+---
+
 #### Conclusions and Takeaways 
 
 [(Back to top)](#table-of-contents)
@@ -63,6 +66,7 @@
     - Age: 34 and below, especially 22-24
     - Education Level:  Those without a Bachelor's or Advanced Degree
 
+---
 
 #### Recommendations
 
@@ -71,6 +75,8 @@
 - Industries now have a better understanding of appropriate employment levels during a pandemic
 - Planning and preparation
 - State and local governments should also examine the disparity among demographic subgroups
+
+---
 
 #### Next Steps
 
@@ -81,23 +87,29 @@
 - Compare industry clusters by state
 - Compare demographic job loss information by state
 
+---
+
 #### Audience
 - Anyone interested in taking a look at the Texas job market during the COVID-19 pandemic
 
+---
+
 #### Project Context
 - The cluster and forecasting dataset was obtained from: [Texas Labor Market](https://texaslmi.com/)
-
 - The explore dataset was obtained from: [US Census](https://ledextract.ces.census.gov/static/data.html)
 
+---
+
 #### Data Dictionaries
+
+---
 
 [(Back to top)](#table-of-contents)
 
 ---
 
-#### Explore
+**Explore**
 
----
 |Variable	|Type	|label |
 | ----- | ----- | ----- |
 |periodicity	|Char(1)	|Periodicity of report|
@@ -118,9 +130,8 @@
 |quarter	|Num	|Time: Quarter|
 
 
-#### Cluster
+**Cluster**
 
----
 | Feature | Definition | Data Type | Notes |
 | ----- | ----- | ----- | ----- |
 | 'Year'| year column | int64 | datetime for year
@@ -130,8 +141,6 @@
 | 'Month' | Month of the year | int64 | datetime for Month |
 | 'Total Employment' | total number of employment | int64 | Total number of employment |
 | 'Date' | year, month, day | datetime64 | date format YYYY-MM-DD |
-
-
 
 ---
 
