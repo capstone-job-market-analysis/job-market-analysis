@@ -11,6 +11,8 @@
 - [Executive Summary](#executive-summary)
     - [Project Objectives](#project-objectives)
     - [Conclusions and Takeaways](#conclusions-and-takeaways)
+    - [Recommendations](#recommendations) 
+    - [Next Steps](#next-steps) 
     - [Next Steps and Recommendations](#next-steps-and-recommendations)    
 - [Data Dictionary](#data-dictionary)
 - [Initial Questions](#initial-questions)
@@ -20,7 +22,8 @@
     - [Acquire](#acquire)
     - [Prepare](#prepare)
     - [Explore](#explore)
-    - [Model and Evaluate](#model-and-evaluate)
+    - [Cluster](#cluster)
+    - [Forecast](#forecast)
 - [Conclusion and Next Steps](#conclusion-and-next-steps)
 - [Reproduce My Project](#reproduce-my-project)
 
@@ -39,34 +42,52 @@
 
 [(Back to top)](#table-of-contents)
 
-- Determine the affect, if any, of the COVID-19 pandemic on the Texas labor market for the year 2020.
+- Explore the impact of the COVID-19 pandemic on the Texas job market
+    - Explore demographic subgroups of gender, ethnicity, race, age, and education level
+- Group industries together based on effect of pandemic
+- Forecast recovery timelines for most-affected industries
 
 #### Conclusions and Takeaways 
 
 [(Back to top)](#table-of-contents)
 
-- After examining the impact of COVID-19 on the Texas job market, we discovered that out of the 98 industries examined, we could categorize those industries into seven distinct groupings based on their total employment trends
+- Effect on industries
+    - 87% Negative Impact
+    - 10% Positive Impact
+    - 3% No Impact
+- Recovery timelines for 11 most-affected industries varied from 3 to 26 months from end of data (June 2021)
+- Demographics Most Affected
+    - Gender:  Women
+    - Ethnicity: Hispanic or Latino
+    - Race: African Americans
+    - Age: 34 and below, especially 22-24
+    - Education Level:  Those without a Bachelor's or Advanced Degree
 
 
-#### Next Steps and Recommendations
+#### Recommendations
 
 [(Back to top)](#table-of-contents)
 
-- Continue to refine metrics to characterize time series data
+- Industries now have a better understanding of appropriate employment levels during a pandemic
+- Planning and preparation
+- State and local governments should also examine the disparity among demographic subgroups
 
-- Forecast time until back to pre-COVID employment numbers for recovering industries
+#### Next Steps
 
-- Forecast continuation of pre-COVID trends after recovery
+[(Back to top)](#table-of-contents)
 
-- Normalize subgroup drill down numbers
+- Adjust forecasting model as new data becomes available 
+- Examine the Pandemic's affect on the national economy
+- Compare industry clusters by state
+- Compare demographic job loss information by state
 
 #### Audience
 - Anyone interested in taking a look at the Texas job market during the COVID-19 pandemic
 
 #### Project Context
-- The Cluster dataset was obtained from: [Texas Labor Market](https://texaslmi.com/)
+- The cluster and forecasting dataset was obtained from: [Texas Labor Market](https://texaslmi.com/)
 
-- The Explore dataset was obtained from: [US Census](https://ledextract.ces.census.gov/static/data.html)
+- The explore dataset was obtained from: [US Census](https://ledextract.ces.census.gov/static/data.html)
 
 #### Data Dictionaries
 
@@ -118,10 +139,9 @@
 
 [(Back to top)](#table-of-contents)
 
-- Question 1: How has the job market in Texas been affected by the COVID-19 pandemic?
-
-- Question 2: Were different industries affect by the covid-19 pandemic?
-
+1. How has the job market in Texas been affected by the COVID-19 pandemic?
+2. Were groups of industries affected similarly?
+3. Were certain demographic subgroups affected disproportionately?
 
 ### Pipeline Stages Breakdown
 
@@ -132,7 +152,7 @@
 [(Back to top)](#table-of-contents)
 
 - [x] Create README.md with data dictionary, project and business goals, and come up with initial hypotheses.
-- [x] Acquire data from (_), save to local .csv and create a function to automate this process. Save the function in an wrangle.py file to import into the Final Report Notebook.
+- [x] Acquire data from websites, save to local .csv and create a function to automate this process. Save the function in an wrangle.py file to import into the Final Report Notebook.
 - [x] Clean and prepare data. Create a function to automate the process, store the function in a prepare.py module, and prepare data in Final Report Notebook by importing and using the function.
 - [x] Clearly define at least two hypotheses and document findings and takeaways.
 - [x] Document conclusions, takeaways, and next steps in the Final Report Notebook.
@@ -188,6 +208,15 @@ ___
 
 ---
 
+##### Forecast
+
+[(Back to top)](#table-of-contents)
+
+- Use recovery trend for recovering industries to predict timeline for full recovery
+- Predict resumption of pre-COVID behavior after recovery
+
+---
+
 ### Conclusion and Next Steps
 
 [(See Executive Summary)](#executive-summary)
@@ -202,6 +231,6 @@ ___
 [(Back to top)](#table-of-contents)
  
 - [x] Read this README.md
-- [ ] Download the modules (.py files), and final_report.ipynb files into your working directory
-- [ ] Download complete dataset from:
+- [ ] Download the modules (.py files), and final_notebook.ipynb files into your working directory
+- [ ] Download dataset csv files using links in final notebook
 - [ ] Run the final_report.ipynb notebook
